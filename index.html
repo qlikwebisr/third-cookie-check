@@ -22,12 +22,12 @@
                 // Send result back to parent
                 window.parent.postMessage({
                     cookiesSupported: cookieSet
-                }, 'https://qlikwebisr.github.io/third-cookie-check');  // In production, replace '*' with the main site's origin
+                }, '');  // In production, replace '*' with the main site's origin
             } catch (e) {
                 // If there's any error, assume cookies are not supported
                 window.parent.postMessage({
                     cookiesSupported: false
-                }, 'https://qlikwebisr.github.io/third-cookie-check');  // In production, replace '*' with the main site's origin
+                }, '*');  // In production, replace '*' with the main site's origin
             }
         }
         
