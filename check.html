@@ -46,10 +46,16 @@
                 };
 
                 const handleMessage = (event) => {
+
+                    console.log('event', event.data);
+                    
                     // Make sure to update this to match your third-party domain
-                    if (event.origin === 'https://qlikwebisr.github.io/third-cookie-check') {
+                    if (event.origin === 'https://qlikwebisr.github.io') {
                         cleanup();
                         window.removeEventListener('message', handleMessage);
+
+                        console.log('event.data', event.data);
+                        
                         resolve(event.data.cookiesSupported);
                     }
                 };
@@ -61,7 +67,7 @@
                 timeoutId = setTimeout(() => {
                     cleanup();
                     window.removeEventListener('message', handleMessage);
-                    resolve(true);
+                    resolve(false);
                 }, 5000);
 
                 document.body.appendChild(iframe);
