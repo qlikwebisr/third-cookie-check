@@ -10,11 +10,13 @@
         function checkCookies() {
 
             var thirdPartyCookiesSupported = false;
-            
+
             try {
                 // Try to set a test cookie
                 document.cookie = "testCookie=1; SameSite=None; Secure";
                 thirdPartyCookiesSupported = document.cookie.indexOf("testCookie=") !== -1;
+
+                console.log('cookieSet', cookieSet);
                 // Clean up test cookie
                 document.cookie = "testCookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure";
             } catch (e) {
