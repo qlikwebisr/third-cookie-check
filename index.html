@@ -19,17 +19,15 @@
                 // Clean up test cookie
                 //document.cookie = "testCookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure";
 
-
-                
                 // Send result back to parent
                 window.parent.postMessage({
                     cookiesSupported: cookieSet
-                }, '*');  // In production, replace '*' with the main site's origin
+                }, 'https://qlikwebisr.github.io/third-cookie-check');  // In production, replace '*' with the main site's origin
             } catch (e) {
                 // If there's any error, assume cookies are not supported
                 window.parent.postMessage({
                     cookiesSupported: false
-                }, '*');  // In production, replace '*' with the main site's origin
+                }, 'https://qlikwebisr.github.io/third-cookie-check');  // In production, replace '*' with the main site's origin
             }
         }
         

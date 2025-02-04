@@ -56,10 +56,12 @@
 
                 window.addEventListener('message', handleMessage);
 
+                console.log('handleMessage', handleMessage);
+                
                 timeoutId = setTimeout(() => {
                     cleanup();
                     window.removeEventListener('message', handleMessage);
-                    resolve(false);
+                    resolve(true);
                 }, 5000);
 
                 document.body.appendChild(iframe);
