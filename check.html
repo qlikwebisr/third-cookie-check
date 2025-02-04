@@ -1,95 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cookie Support Checker - Main Site</title>
     <style>
-        .result {
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-        .supported {
-            background-color: #e6ffe6;
-            border-color: #00cc00;
-        }
-        .not-supported {
-            background-color: #ffe6e6;
-            border-color: #cc0000;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      .result {
+        margin: 20px;
+        padding: 10px;
+        /* border: 1px solid #ccc; */
+        font-size: 18px;
+        font-weight: 700;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Third-Party Cookie Support Checker</h1>
-    <button onclick="checkCookieSupport()">Check Cookie Support</button>
     <div id="result" class="result"></div>
 
     <script>
-        function checkThirdPartyCookieSupport() {
-            return new Promise((resolve) => {
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                // Replace with your actual third-party domain
-                iframe.src = 'https://qlikwebisr.github.io/third-cookie-check/index.html';
-                
-                let timeoutId;
-                
-                const cleanup = () => {
-                    clearTimeout(timeoutId);
-                    document.body.removeChild(iframe);
-                };
+      checkCookies();
 
-                const handleMessage = (event) => {
+      async function checkCookies() {
+        const result = document.getElementById("result");
+        result.innerText = await check3PCookies();
+      }
 
-                    console.log('event', event.data);
-                    
-                    // Make sure to update this to match your third-party domain
-                    if (event.origin === 'https://qlikwebisr.github.io') {
-                        cleanup();
-                        window.removeEventListener('message', handleMessage);
+      /**
+       * check third-party cookie
+       * @returns
+       */
+      function check3PCookies() {
+        return new Promise((resolve, reject) => {
+          //console.log('cookieEnabled', navigator.cookieEnabled);
 
-                        console.log('event.data', event.data);
-                        
-                        resolve(event.data.cookiesSupported);
-                    }
-                };
+          if (navigator.cookieEnabled) {
+            const frame = document.createElement("iframe");
+            frame.id = "3pc";
+            frame.src = "https://qlikwebisr.github.io/third-cookie-check/"; //Add your hosted domain url here
+            frame.style.display = "none";
+            frame.style.position = "fixed";
+            document.body.appendChild(frame);
 
-                window.addEventListener('message', handleMessage);
+            window.addEventListener("message", function (event) {
+              //console.log('event', event);
 
-                console.log('handleMessage', handleMessage);
-                
-                timeoutId = setTimeout(() => {
-                    cleanup();
-                    window.removeEventListener('message', handleMessage);
-                    resolve(false);
-                }, 5000);
+              // if (event.data === "3pcSupported" || event.data === "3pcUnsupported") {
 
-                document.body.appendChild(iframe);
+              if (typeof event.data != undefined) {
+                //console.log('event.data', event.data);
+
+                if (event.data === "3pcSupported") {
+                  //document.body.removeChild(frame);
+
+                  resolve("Third-Party cookies supported");
+                } else {
+                  reject("Third-Party cookies not supported");
+                }
+              } else {
+                reject("Third-Party cookies not supported");
+              }
             });
-        }
-
-        async function checkCookieSupport() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.className = 'result';
-            resultDiv.textContent = 'Checking cookie support...';
-
-            try {
-                const supported = await checkThirdPartyCookieSupport();
-                resultDiv.textContent = supported ? 
-                    '✅ Third-party cookies are supported' : 
-                    '❌ Third-party cookies are blocked';
-                resultDiv.classList.add(supported ? 'supported' : 'not-supported');
-            } catch (error) {
-                resultDiv.textContent = '❌ Error checking cookie support: ' + error.message;
-                resultDiv.classList.add('not-supported');
-            }
-        }
+          } else {
+            reject("Third-Party cookies not supported");
+          }
+        });
+      }
     </script>
-</body>
+  </body>
 </html>
