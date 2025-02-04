@@ -19,10 +19,32 @@
     <div id="result" class="result"></div>
 
     <script>
+
+        (async function () {
+
+            const result = document.getElementById("result");
+            result.innerText = "Checking third-party cookies...";
+            result.innerText = await check3PCookies();
+            // var thirdPartyCookiesSupported = false;
+            // try {
+            //     // Try to set a test cookie
+            //     document.cookie = "testCookie=1; SameSite=None; Secure";
+            //     thirdPartyCookiesSupported = document.cookie.indexOf("testCookie=") !== -1;
+            //     // Clean up test cookie
+            //     document.cookie = "testCookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure";
+            // } catch (e) {
+            //     // If there's any error, assume cookies are not supported
+            //     thirdPartyCookiesSupported = false;
+            // }
+            // window.parent.postMessage(thirdPartyCookiesSupported ? "3pcSupported" : "3pcUnsupported", '*');
+        })();
+
+        
       checkCookies();
 
       async function checkCookies() {
         const result = document.getElementById("result");
+        result.innerText = "Checking third-party cookies...";
         result.innerText = await check3PCookies();
       }
 
@@ -43,12 +65,11 @@
             document.body.appendChild(frame);
 
             window.addEventListener("message", function (event) {
-              //console.log('event', event);
+              console.log('event', event);
 
               // if (event.data === "3pcSupported" || event.data === "3pcUnsupported") {
 
               if (typeof event.data != undefined) {
-                //console.log('event.data', event.data);
 
                 if (event.data === "3pcSupported") {
                   //document.body.removeChild(frame);
