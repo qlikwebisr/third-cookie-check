@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Check</title>
+</head>
+<body>
+    <script>
+        function checkCookies() {
+            try {
+                // Try to set a test cookie
+                document.cookie = "testCookie=1; SameSite=None; Secure";
+                const cookieSet = document.cookie.indexOf("testCookie=") !== -1;
+                
+                // Clean up test cookie
+                document.cookie = "testCookie=1; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure";
+                
+                // Send result back to parent
+                window.parent.postMessage({
+                    cookiesSupported: cookieSet
+                }, '*');  // In production, replace '*' with the main site's origin
+            } catch (e) {
+                // If there's any error, assume cookies are not supported
+                window.parent.postMessage({
+                    cookiesSupported: false
+                }, '*');  // In production, replace '*' with the main site's origin
+            }
+        }
+        
+        // Run check when page loads
+        window.onload = checkCookies;
+    </script>
+</body>
+</html>
